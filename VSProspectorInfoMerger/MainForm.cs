@@ -14,6 +14,9 @@ namespace VSProspectorInfoMerger
 
         private EDirection dir = EDirection.input;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainForm"/> class.
+        /// </summary>
         public MainForm()
         {
             InitializeComponent();
