@@ -8,7 +8,7 @@ This application requires .Net Desktop Runtime.
 https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
 # Usage
-1. Select your file in the top textbox. The file is typically at `%appdata%/VintageStoryData/ModData/<serverID>/vsprospectorinfo.data.json.
+1. Select your file in the top textbox. The file is typically at `%appdata%/VintageStoryData/ModData/<serverID>/vsprospectorinfo.data.json`.
 2. Select the file you want to merge into your file. Get your friend to send it to you in some way.
 3. Click the Merge button.
 
