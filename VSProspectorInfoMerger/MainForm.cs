@@ -13,6 +13,8 @@ namespace VSProspectorInfoMerger
         }
 
         private EDirection dir = EDirection.input;
+        private readonly string defaultOutputFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\VintageStoryData\\ModData\\";
+        private readonly string defaultInputFile = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
@@ -22,8 +24,8 @@ namespace VSProspectorInfoMerger
             InitializeComponent();
 
             // init default file paths
-            tb_outputFile.Text = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\VintageStoryData\\ModData\\";
-            tb_inputFile.Text = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\";
+            tb_outputFile.Text = defaultOutputFile;
+            tb_inputFile.Text = defaultInputFile;
 
             // prepare file dialogue
             ofd_fileDialogue.Filter = "PI Json Documents|vsprospectorinfo.data.json|Json Documents|*.json|All Files|*.*";
@@ -34,10 +36,14 @@ namespace VSProspectorInfoMerger
 
         private void btn_browseOutputFile_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(tb_outputFile.Text))
+            {
+                tb_outputFile.Text = defaultOutputFile;
+            }
             FileInfo fi = new FileInfo(tb_outputFile.Text);
             if (fi.Directory?.Exists != true)
             {
-                fi = new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\VintageStoryData\\ModData");
+                fi = new FileInfo(defaultOutputFile);
             }
             dir = EDirection.output;
             ofd_fileDialogue.InitialDirectory = fi.DirectoryName + "\\";
@@ -47,10 +53,14 @@ namespace VSProspectorInfoMerger
         }
         private void btn_browseInputFile_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(tb_inputFile.Text))
+            {
+                tb_inputFile.Text = defaultInputFile;
+            }
             FileInfo fi = new FileInfo(tb_inputFile.Text);
             if (fi.Directory?.Exists != true)
             {
-                fi = new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+                fi = new FileInfo(defaultInputFile);
             }
             dir = EDirection.input;
             ofd_fileDialogue.InitialDirectory = fi.DirectoryName + "\\";
