@@ -31,6 +31,11 @@ namespace VSProspectorInfoMerger
                 return false;
             }
 
+            if (obj.Values.Count != Values.Count)
+            {
+                return false;
+            }
+
             foreach (PIDataBlockValue dbv in obj.Values)
             {
                 if (Values.ToList().Find(x => { return dbv.Equals(x); }) == null)
