@@ -76,6 +76,13 @@ namespace VSProspectorInfoMerger
         {
             FileInfo ofi = new FileInfo(tb_outputFile.Text);
             FileInfo ifi = new FileInfo(tb_inputFile.Text);
+            int mergeCount = 0;     // number of items merged into the output file.
+            int duplicateCount = 0; // number of items that were the same
+            int warningCount = 0;   // number of items that had the same coordinates but different values
+            int processedCount = 0; // number of items that had been processed
+            int totalCount = 0;     // total number of items that were processed
+
+            string json;
 
             if (!ifi.Exists)
             {
@@ -88,8 +95,6 @@ namespace VSProspectorInfoMerger
                 MessageBox.Show("Own file does not exist", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            string json;
 
             // Load all data from output file
             List<PIDataBlock>? outputData = null;
@@ -117,20 +122,27 @@ namespace VSProspectorInfoMerger
                 return;
             }
 
+            totalCount = inputData.Count();
+
             // append data to the output file where it doesn't match to merge the data
             bool ignoreAllErrors = false;
             foreach (PIDataBlock db in inputData)
             {
+                processedCount++;
                 PIDataBlock? foundData = outputData.Find(x => { return x.X == db.X && x.Z == db.Z; });
                 if (foundData == null)
                 {
                     outputData.Add(db);
+                    mergeCount++;
                 }
                 else
                 {
+                    duplicateCount++;
                     // check other values for sameness
                     if (!foundData.Equals(db) && ignoreAllErrors == false)
                     {
+                        duplicateCount--;
+                        warningCount++;
                         string message = "Data Missmatch.\nOwn File:\n--------------\n" +
                             foundData.ToString() +
                             "\n--------------\n\nOther File:\n--------------\n" +
@@ -143,6 +155,7 @@ namespace VSProspectorInfoMerger
                         DialogResult result = MessageBox.Show(message, "MISSMATCH", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                         if (result == DialogResult.Cancel)
                         {
+                            lbl_status.Text = string.Format("Aborted after {0} of {1} entries. {2} duplicates and {3} warnings.", processedCount, totalCount, duplicateCount, warningCount);
                             return;
                         }
                         else if (result == DialogResult.Yes)
@@ -153,12 +166,22 @@ namespace VSProspectorInfoMerger
                 }
             }
 
-            // make a backup of ofi
-            ofi.CopyTo(ofi.FullName + "." + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".bkp");
+            if (mergeCount > 0)
+            {
+                // make a backup of ofi
+                string bkpFileName = ofi.FullName + "." + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".bkp";
+                ofi.CopyTo(bkpFileName);
 
-            // write back to the output file
-            json = JsonConvert.SerializeObject(outputData, Formatting.Indented);
-            File.WriteAllText(ofi.FullName, json);
+                // write back to the output file
+                json = JsonConvert.SerializeObject(outputData, Formatting.Indented);
+                File.WriteAllText(ofi.FullName, json);
+                lbl_status.Text = string.Format("Merged {0} entries out of {1}. {2} duplicates and {3} warnings.", mergeCount, totalCount, duplicateCount, warningCount);
+            }
+            else
+            {
+                lbl_status.Text = string.Format("Nothing new, file not written. {0} processed. {1} duplicates and {2} warnings.", totalCount, duplicateCount, warningCount);
+            }
+            
         }
 
         private IEnumerable<string> ReadLines(Func<Stream> streamProvider, Encoding encoding)

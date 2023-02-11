@@ -36,6 +36,8 @@
             this.btn_browseInputFile = new System.Windows.Forms.Button();
             this.btn_merge = new System.Windows.Forms.Button();
             this.ofd_fileDialogue = new System.Windows.Forms.OpenFileDialog();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lbl_status = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -111,11 +113,31 @@
             // 
             this.ofd_fileDialogue.FileOk += new System.ComponentModel.CancelEventHandler(this.ofd_fileDialogue_FileOk);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 81);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 14);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Status:";
+            // 
+            // lbl_status
+            // 
+            this.lbl_status.AutoSize = true;
+            this.lbl_status.Location = new System.Drawing.Point(86, 81);
+            this.lbl_status.Name = "lbl_status";
+            this.lbl_status.Size = new System.Drawing.Size(46, 14);
+            this.lbl_status.TabIndex = 8;
+            this.lbl_status.Text = "Ready";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(834, 103);
+            this.Controls.Add(this.lbl_status);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.btn_merge);
             this.Controls.Add(this.btn_browseInputFile);
             this.Controls.Add(this.btn_browseOutputFile);
@@ -141,5 +163,7 @@
         private Button btn_browseInputFile;
         private Button btn_merge;
         private OpenFileDialog ofd_fileDialogue;
+        private Label label3;
+        private Label lbl_status;
     }
 }
